@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DupliFiles.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="using:DupliFiles.Models"
+		xmlns:info="using:System.IO"
+		xmlns:colg="using:System.Collections.Generic"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
+        x:Class="DupliFiles.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="DupliFiles">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="400, 400, *" RowDefinitions="*, 30">
+        <ListBox ItemsSource="{Binding Folders}">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="model:Folder">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox Grid.Column="1" ItemsSource="{Binding Files}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="info:FileInfo">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+		<ListBox Grid.Column="2" ItemsSource="{Binding DuplicateFiles}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="model:DupuList">
+					<ListBox ItemsSource="{Binding DuplicateFiles}" >
+						<ListBox.ItemTemplate>
+							<DataTemplate DataType="model:File">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="{Binding FileInfo.Name}"/>
+									<Button Command="{Binding OpenCommand}" Content="⏺️"/>
+									<Button Command="{Binding ShowCommand}" Content="➡️"/>
+									<Button Command="{Binding DeleteCommand}" Content="❎"/>
+								</StackPanel>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Content="Open Folder" Command="{Binding OpenFolderCommand}"/>
+			<Button Content="Load Files" Command="{Binding LoadFilesCommand}"/>
+			<Button Content="Compare" Command="{Binding CompareCommand}"/>
+        </StackPanel>
+    </Grid> 	
+</Window>
